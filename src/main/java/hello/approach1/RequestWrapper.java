@@ -1,4 +1,4 @@
-package hello;
+package hello.approach1;
 
 import java.util.Collection;
 
@@ -70,11 +70,11 @@ public class RequestWrapper extends FirewalledRequest {
             boolean firstHeader = true;
             for (String header : headers) { // there can be multiple Set-Cookie attributes
                 if (firstHeader) {
-                    response.setHeader(HttpHeaders.SET_COOKIE, String.format("%s; %s", header, "SameSite=None")); // set
+                    response.setHeader(HttpHeaders.SET_COOKIE, String.format("%s; %s", header, "SameSite=Strict")); // set
                     firstHeader = false;
                     continue;
                 }
-                response.addHeader(HttpHeaders.SET_COOKIE, String.format("%s; %s", header, "SameSite=None")); // add
+                response.addHeader(HttpHeaders.SET_COOKIE, String.format("%s; %s", header, "SameSite=Strict")); // add
             }
         }
     }

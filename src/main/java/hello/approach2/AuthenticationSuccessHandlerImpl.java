@@ -1,27 +1,21 @@
-package hello;
+package hello.approach2;
 
 import java.io.IOException;
 import java.util.Collection;
 
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-public class SameSiteFilter implements javax.servlet.Filter {
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
-    }
+public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHandler {
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        chain.doFilter(request, response);
-        addSameSiteCookieAttribute((HttpServletResponse) response); // add SameSite=strict cookie attribute
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
+        addSameSiteCookieAttribute(response);    // add SameSite=strict to Set-Cookie attribute
+        response.sendRedirect("/hello"); // redirect to hello.html after success auth
     }
 
     private void addSameSiteCookieAttribute(HttpServletResponse response) {
@@ -35,10 +29,5 @@ public class SameSiteFilter implements javax.servlet.Filter {
             }
             response.addHeader(HttpHeaders.SET_COOKIE, String.format("%s; %s", header, "SameSite=Strict"));
         }
-    }
-
-    @Override
-    public void destroy() {
-
     }
 }
